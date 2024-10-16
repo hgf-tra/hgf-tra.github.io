@@ -30,6 +30,9 @@ jobs:
             output_file="$output_dir/${file%.adoc}.html"
             docker run --rm -v "${PWD}:/documents" asciidoctor/docker-asciidoctor asciidoctor "$file" -o "$output_file"
           done
+          
+          echo "Generated HTML files:"
+          find ../github-pages/rendered-docs -name '*.html'
 
       - name: Check generated files
         run: |
