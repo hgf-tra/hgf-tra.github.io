@@ -19,7 +19,7 @@ jobs:
 
       - name: Build documentation with Docker
         run: |
-          docker run --rm -v "${{ github.workspace }}:/docs" -w /docs mkdocs/mkdocs build --site-dir github-pages/rendered-docs
+          docker run --rm -v "${{ github.workspace }}:/docs" -w /docs javanile/mkdocs build --site-dir github-pages/rendered-docs
 
       - name: Update mkdocs.yaml
         run: |
