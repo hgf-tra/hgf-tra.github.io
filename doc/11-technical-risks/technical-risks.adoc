@@ -1,0 +1,87 @@
+== Risks and Technical Debts
+
+=== Business or Domain Risks
+
+[%header, cols="1,3,5"]
+|===
+|Severity
+|Risk
+|Description
+
+|mid?
+|Unclear migration plan for existing content
+|A lot of assessments, especially *custom* assessments, are *very* tightly coupled with HTS (Player). Their migration path towards new-generation HTS is not clear.
+
+|mid?
+|Spaghetti code
+|HTS tends to use spaghetti code approach in many places, with unclear API boundaries and over-reliance on global variables. Previous risk makes it even worse, because *custom* assessments are using undocumented and spaghetti-code hooks into the HTS Player internals.
+
+|mid?
+|Outdated technology frontend 
+|HTS frontend (Player and Portal/Environment) is written using ancient Ext.js from about 10 years ago. (No, it's not a typo, it's *not* Next.js.)
+
+|low
+|Hardware and Backups in same City
+|The whole hardware and all assets are located in Göttingen (see xref:../07-deployment-view/deployment-view.adoc#_geolocations_backup_strategy)[Geolocations & Backup Strategy]). In worst case a city wide desaster could lead to complete loss of data.
+
+|low
+|Unnecessary Background Connection Pool in Player
+|Since the connection pool configuration is done in the shared module of HTS Platform, it is also used in the Player. This is not necessary, because the Player does not need the background connection pool. The background connection pool is only used for the Environment.
+|===
+
+
+=== Technical Debt
+
+[%header, cols="1,2,5a,1"]
+|===
+|Impact
+|Location
+|Description
+|Status
+|Low to moderate
+|xref:..//05-building-block-view/license-context/license-context.adoc[License Context], +
+xref:../05-building-block-view/portal/hts-environment/hts-environment.adoc[HTS Environment] +
+`TacTransformationService` +
+.`lockOrUnlockTestForms(..)`
+| There is fallback behavior when updating license information upon login into HTS: +
+If a test is licensed, but within the license there is not a single testform included, then all testforms are interpreted as available. +
+For further details see: +
+<<techdebt.licensefallback>>
+|Tolerated
+|Low
+|
+`HikariTenantConnectionFilter`
+`PlayerAuthenticator`.`login(..)`
+| The currently implemented mechanism to recognize login requests is not applicable for logins performed invoking testlinks with `autologin` flag set, leading to premature creation of a system connection. The `login(..)` method of the `PlayerAuthenticator` has been adjusted to handle this.
+|Tolerated
+|===
+
+[[techdebt.licensefallback]]
+==== License fallback behaviour
+
+===== Behaviour
+On user login into HTS Environment, HTS updates the tenant database with the current license information read from the License Context.
+
+Usually, a license (`UsePointAccount`) for a specific test has the property `includeForms`, which in turn contains a comma-separated list of the testforms that are licensed. +
+This is the case for all accounts managed via the HTSLicense frontend, but not for accounts managed through other ERP systems.
+
+===== Fallback
+Thus, for some accounts' licenses, this `includeForms` property is missing completely. +
+In this case, HTS has a fallback in place: +
+It interprets a missing `includeForms` property as "_all_ testforms are licensed for this test."
+
+
+===== Risk and Decision
+
+The decision to keep the fallback-behaviour may result in differing behaviour for our customers in case of updating
+an already licenced test with additional, new testforms:
+
+* Test licensed and `includeForms` property does not exist +
+  -> new testform is *available* after new tac deployment/update
+
+* Test licensed and `includeForms` with specified list of licensed forms (all previously existing or a subset) is used +
+  -> new testform is *not* available after new tac deployment/update
+
+This behavior is accepted for now, knowing that ERP systems used by sales may not even _support_ testform selection. +
+Before changing the behaviour, it is crucial to know the exact sales process.
+
