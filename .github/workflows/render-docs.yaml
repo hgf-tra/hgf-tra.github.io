@@ -82,7 +82,7 @@ jobs:
           done
 
           echo '    </ul>' >> github-pages/list.html
-          echo '    <a href="index.html" class="back-btn">Back to project list</a>' >> github-pages/list.html
+          echo '    <a href="../index.html" class="back-btn">Back to project list</a>' >> github-pages/list.html
           echo '  </body>' >> github-pages/list.html
           echo '</html>' >> github-pages/list.html
 
