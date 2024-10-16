@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'doc/**/*.adoc'
 
 
 permissions:
@@ -69,8 +71,12 @@ jobs:
           git config --local user.name "GitHub Action"
           git add github-pages/rendered-docs
           git add github-pages/list.html
-          git commit -m "Generated documentation with MkDocs" || echo "No changes to commit"
-          git push
+          if ! git diff --cached --quiet; then
+            git commit -m "Generated HTML documentation from AsciiDoc"
+            git push origin main
+          else
+            echo "No changes to commit"
+          fi
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
