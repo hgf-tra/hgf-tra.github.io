@@ -22,7 +22,7 @@ jobs:
 
       - name: Build documentation with Docker
         run: |
-          docker run --rm -v "${{ github.workspace }}:/docs" -w /docs asciidoctor/docker-asciidoctor build --site-dir github-pages/rendered-docs
+          docker run --rm -v "${{ github.workspace }}:/docs" -w /docs asciidoctor/docker-asciidoctor asciidoctor --site-dir github-pages/rendered-docs
 
       - name: Generate mkdocs.yaml
         run: |
