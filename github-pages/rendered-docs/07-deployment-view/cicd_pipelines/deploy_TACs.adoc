@@ -1,9 +1,0 @@
-= Deployment of TAC files
-
-You first have to define, which TACs are going to be deployed.
-You must modify the TAC file list of the according hostgroup
-on which the TACs should be deployed.
-
-Links:
-- https://gitlab.hogrefe.de/hts-projects/tac-deployment
-
