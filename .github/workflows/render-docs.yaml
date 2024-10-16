@@ -25,10 +25,12 @@ jobs:
           cd doc
           find . -name '*.adoc' | while read -r file; do
             echo "Processing $file..."
-            target_file="../github-pages/rendered-docs/${file%.adoc}.html"
-            mkdir -p "$(dirname "$target_file")"
-            docker run --rm -v ${PWD}:/documents asciidoctor/docker-asciidoctor asciidoctor "$file" -o "$target_file"
+            output_dir="../github-pages/rendered-docs/$(dirname "$file")"
+            mkdir -p "$output_dir"
+            output_file="$output_dir/${file%.adoc}.html"
+            docker run --rm -v "${PWD}:/documents" asciidoctor/docker-asciidoctor asciidoctor "$file" -o "$output_file"
           done
+
 
       - name: Generate mkdocs.yaml
         run: |
