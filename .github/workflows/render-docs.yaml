@@ -29,29 +29,6 @@ jobs:
             docker run --rm -v "${PWD}:/documents" asciidoctor/docker-asciidoctor asciidoctor "$file" -o "$output_file"
           done
 
-
-      - name: Generate mkdocs.yaml
-        run: |
-          echo 'site_name: HTS LTS Documentation' > mkdocs.yaml
-          echo 'nav:' >> mkdocs.yaml
-          echo '  - Home: index.html' >> mkdocs.yaml
-          echo '  - Documentation:' >> mkdocs.yaml
-          echo '      - List: github-pages/list.html' >> mkdocs.yaml
-
-          find doc -type f -name '*.adoc' | while read -r file; do
-            dir=$(dirname "$file")
-            filename=$(basename "$file" .adoc)
-            relative_path=$(echo "$file" | sed 's|^doc/||; s|\.adoc$|.html|')
-            echo "      - $(basename "$dir"): " >> mkdocs.yaml
-            echo "          - $filename: $relative_path" >> mkdocs.yaml
-          done
-
-          echo 'theme:' >> mkdocs.yaml
-          echo '  name: mkdocs' >> mkdocs.yaml
-          echo 'docs_dir: doc' >> mkdocs.yaml
-      
-      
-
       - name: Update list.html
         run: |
           # Start the HTML file with the basic structure
