@@ -1,0 +1,9 @@
+site_name: HTS LTS Documentation
+
+nav:
+  - Home: index.html
+  - Documentation:
+      - List: topic/list.html
+
+theme:
+  name: material
