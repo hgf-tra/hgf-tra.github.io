@@ -35,7 +35,7 @@ jobs:
           done
 
           echo 'theme:' >> mkdocs.yaml
-          echo '  name: material' >> mkdocs.yaml
+          echo '  name: mkdocs' >> mkdocs.yaml
             
       - name: Update list.html
         run: |

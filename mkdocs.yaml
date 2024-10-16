@@ -6,4 +6,4 @@ nav:
       - List: github-pages/list.html
 
 theme:
-  name: material
+  name: mkdocs
