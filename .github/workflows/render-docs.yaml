@@ -20,9 +20,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build documentation with Docker
+      - name: Generate HTML from AsciiDoc
         run: |
-          docker run --rm -v "${{ github.workspace }}:/docs" -w /docs asciidoctor/docker-asciidoctor asciidoctor --site-dir github-pages/rendered-docs
+          cd doc
+          find . -name '*.adoc' | while read -r file; do
+            echo "Processing $file..."
+            target_file="../github-pages/rendered-docs/${file%.adoc}.html"
+            mkdir -p "$(dirname "$target_file")"
+            docker run --rm -v ${PWD}:/documents asciidoctor/docker-asciidoctor asciidoctor "$file" -o "$target_file"
+          done
 
       - name: Generate mkdocs.yaml
         run: |
