@@ -31,7 +31,6 @@ jobs:
 
       - name: Update list.html
         run: |
-          # Start the HTML file with the basic structure
           echo '<!DOCTYPE html>' > github-pages/list.html
           echo '<html lang="de">' >> github-pages/list.html
           echo '  <head>' >> github-pages/list.html
@@ -54,7 +53,6 @@ jobs:
           echo '    <p>All available documentations: </p>' >> github-pages/list.html
           echo '    <ul>' >> github-pages/list.html
 
-          # Append a list item for each HTML file
           for file in github-pages/rendered-docs/*.html; do
             filename=$(basename "$file")
             echo "      <li><a href='rendered-docs/$filename'>$filename</a></li>" >> github-pages/list.html
@@ -71,8 +69,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add github-pages/rendered-docs
           git add github-pages/list.html
-          git add mkdocs.yaml
-          git commit -m "Generated documentation with MkDocs"
+          git commit -m "Generated documentation with MkDocs" || echo "No changes to commit"
           git push
 
         env:
