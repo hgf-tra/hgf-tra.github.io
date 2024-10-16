@@ -31,6 +31,11 @@ jobs:
             docker run --rm -v "${PWD}:/documents" asciidoctor/docker-asciidoctor asciidoctor "$file" -o "$output_file"
           done
 
+      - name: Check generated files
+        run: |
+          echo "Listing rendered files:"
+          ls -R github-pages/rendered-docs/
+
       - name: Update list.html
         run: |
           echo '<!DOCTYPE html>' > github-pages/list.html
