@@ -17,22 +17,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.13'
-
-      - name: Install MkDocs and Plugins
+      - name: Build documentation with Docker
         run: |
-          pip install mkdocs mkdocs-material mkdocs-asciidoc
-
-      - name: Create output directory
-        run: |
-          mkdir -p github-pages/rendered-docs
-
-      - name: Build documentation
-        run: |
-          mkdocs build --site-dir github-pages/rendered-docs
+          docker run --rm -v "${{ github.workspace }}:/docs" -w /docs mkdocs/mkdocs build --site-dir github-pages/rendered-docs
 
       - name: Update mkdocs.yaml
         run: |
