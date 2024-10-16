@@ -1,0 +1,13 @@
+= CICD Strategy
+
+== Concept
+
+
+== Links
+- https://minimumcd.org/
+- https://gitlab.hogrefe.de/hts-projects/hts-deploy/
+
+== Overview
+
+.Current Situation (end of august 2023)
+image:cicd_alpha.png[production-overview.drawio]

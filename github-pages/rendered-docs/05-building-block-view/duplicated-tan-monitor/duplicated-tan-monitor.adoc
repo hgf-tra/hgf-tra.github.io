@@ -1,0 +1,9 @@
+== DuplicatedTANMonitor - Level 2
+=== Purpose
+
+DuplicatedTANMonitor is a small application which monitors each user database for duplicated TANs.
+If a duplication is detected a CSV file will be created and also logged to stdout/stderr.
+
+=== Reference
+For further information see: https://hts.hogrefe.de/group/projects/infrastructure/wiki/Duplicate_TAN_Monitor[Wiki - Duplicate_TAN_Monitor]
+

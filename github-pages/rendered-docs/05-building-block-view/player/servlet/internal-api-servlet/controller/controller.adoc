@@ -1,0 +1,9 @@
+== Player Internal API Servlet Controllers - Level 4
+
+All the controllers that can be reached via the Internal Api Servlet of the player.
+
+[width="100%",cols="20%,45%,10%,25%",options="header",]
+|===
+| Building Block | Short Description | Authentication | Available Endpoints
+| PlayerTacController | Infrastructure controller for handling tac files such as uploading a tac to the player and unpacking it. | Basic Auth | POST /v1/tacs/\{tacGuid}
+|===

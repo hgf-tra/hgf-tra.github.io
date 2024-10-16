@@ -1,0 +1,33 @@
+== HTS Check License Points Helper - Level 5
+
+
+## Introduction and Goals
+
+### Purpose
+Provide an outline for the various license checks that are performed in the helper class `CheckLicensePointsHelper` when the user tries to create a test link for a test battery.
+
+(See xref:../../../../../06-runtime-view/runtime-view.adoc[runtime view] for a detailed flow diagram of the performed checks.)
+
+
+
+#### Use cases
+
+[options="header"]
+|===================================================================================================
+| *Use case*                      | *Entry point*      | *Feedback for user?*
+| Test link creation              | Test battery view  | Yes
+| Test restart                    | Test journal       | Yes
+| Login with cached test battery  | Test battery view  | No. Deprecated, exception is logged but not thrown.
+|===================================================================================================
+
+
+## Building Blocks / Class Structure
+[width="100%",cols="12%,88%",options="header",]
+|===
+|Building Block |Short Description
+| `TODO`| TODO
+|===
+
+=== Directory/File Location
+
+* xref:../hts-controller.adoc[hts-controller]

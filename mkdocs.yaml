@@ -1,10 +1,86 @@
 site_name: HTS LTS Documentation
-
 nav:
   - Home: index.html
   - Documentation:
       - List: github-pages/list.html
-
+      - 11-technical-risks: 
+          - technical-risks: 11-technical-risks/technical-risks.html
+      - 12-glossary: 
+          - glossary: 12-glossary/glossary.html
+      - 02-architecture-constraints: 
+          - architecture-constraints: 02-architecture-constraints/architecture-constraints.html
+      - 08-concepts: 
+          - concepts: 08-concepts/concepts.html
+      - 03-system-scope-and-context: 
+          - system-scope-and-context: 03-system-scope-and-context/system-scope-and-context.html
+      - 09-architecture-decisions: 
+          - architecture-decisions: 09-architecture-decisions/architecture-decisions.html
+      - 07-deployment-view: 
+          - deployment-view: 07-deployment-view/deployment-view.html
+      - reverse-proxy: 
+          - reverse-proxy: 07-deployment-view/reverse-proxy/reverse-proxy.html
+      - 07-deployment-view: 
+          - cicd: 07-deployment-view/cicd.html
+      - cicd_pipelines: 
+          - deploy_translations: 07-deployment-view/cicd_pipelines/deploy_translations.html
+      - cicd_pipelines: 
+          - deploy_TACs: 07-deployment-view/cicd_pipelines/deploy_TACs.html
+      - cicd_pipelines: 
+          - build_support-tools: 07-deployment-view/cicd_pipelines/build_support-tools.html
+      - cicd_pipelines: 
+          - deploy_hts: 07-deployment-view/cicd_pipelines/deploy_hts.html
+      - cicd_pipelines: 
+          - build_hts: 07-deployment-view/cicd_pipelines/build_hts.html
+      - cicd_pipelines: 
+          - overview: 07-deployment-view/cicd_pipelines/overview.html
+      - 10-quality-requirements: 
+          - quality-requirements: 10-quality-requirements/quality-requirements.html
+      - 01-introduction-and-goals: 
+          - introduction-and-goals: 01-introduction-and-goals/introduction-and-goals.html
+      - support-tool: 
+          - partial-result: 06-runtime-view/support-tool/partial-result.html
+      - support-tool: 
+          - reset-password: 06-runtime-view/support-tool/reset-password.html
+      - tac-update-limiter: 
+          - tac-update-deferrer: 06-runtime-view/tac-update-limiter/tac-update-deferrer.html
+      - 06-runtime-view: 
+          - runtime-view: 06-runtime-view/runtime-view.html
+      - license: 
+          - license_check_test_link_creation: 06-runtime-view/license/license_check_test_link_creation.html
+      - 05-building-block-view: 
+          - building-block-view: 05-building-block-view/building-block-view.html
+      - hts-ano-sync: 
+          - hts-ano-sync: 05-building-block-view/player/hts-ano-sync/hts-ano-sync.html
+      - hts-assessment-result-extractor: 
+          - hts-assessment-result-extractor: 05-building-block-view/player/hts-assessment-result-extractor/hts-assessment-result-extractor.html
+      - servlet: 
+          - player-servlets: 05-building-block-view/player/servlet/player-servlets.html
+      - controller: 
+          - controller: 05-building-block-view/player/servlet/internal-api-servlet/controller/controller.html
+      - player: 
+          - player: 05-building-block-view/player/player.html
+      - support-tool: 
+          - support-tool: 05-building-block-view/support-tool/support-tool.html
+      - portal: 
+          - portal: 05-building-block-view/portal/portal.html
+      - hts-environment: 
+          - hts-environment: 05-building-block-view/portal/hts-environment/hts-environment.html
+      - ClientImport: 
+          - hts-clientimport: 05-building-block-view/portal/hts-environment/controller/ClientImport/hts-clientimport.html
+      - controller: 
+          - hts-controller: 05-building-block-view/portal/hts-environment/controller/hts-controller.html
+      - CheckLicensePointsHelper: 
+          - hts-checklicensepointshelper: 05-building-block-view/portal/hts-environment/controller/CheckLicensePointsHelper/hts-checklicensepointshelper.html
+      - duplicated-tan-monitor: 
+          - duplicated-tan-monitor: 05-building-block-view/duplicated-tan-monitor/duplicated-tan-monitor.html
+      - license-context: 
+          - license-context: 05-building-block-view/license-context/license-context.html
+      - test-production: 
+          - test-production: 05-building-block-view/test-production/test-production.html
+      - twocute: 
+          - twocute: 05-building-block-view/test-production/twocute/twocute.html
+      - 04-solution-strategy: 
+          - solution-strategy: 04-solution-strategy/solution-strategy.html
 theme:
   name: mkdocs
 docs_dir: doc
