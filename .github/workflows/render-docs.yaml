@@ -1,0 +1,106 @@
+name: Render Documentation
+
+on:
+  workflow_call:
+  push:
+    branches:
+      - main
+    paths:
+      - 'doc/**/*.adoc'
+      - 'doc/**/*.md'
+
+jobs:
+  render-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Install MkDocs and Plugins
+        run: |
+          pip install mkdocs mkdocs-material mkdocs-arc42 mkdocs-asciidoc
+
+      - name: Create output directory
+        run: |
+          mkdir -p github-pages/topic/rendered-docs
+
+      - name: Build documentation
+        run: |
+          mkdocs build --site-dir github-pages/topic/rendered-docs
+
+      - name: Update mkdocs.yaml
+        run: |
+          echo 'site_name: HTS LTS Documentation' > mkdocs.yaml
+          echo 'nav:' >> mkdocs.yaml
+          echo '  - Home: index.html' >> mkdocs.yaml
+          echo '  - Documentation:' >> mkdocs.yaml
+          echo '      - List: topic/list.html' >> mkdocs.yaml
+          
+          # Add generated documents to the mkdocs.yaml
+          for file in github-pages/topic/rendered-docs/*.html; do
+            filename=$(basename "$file" .html)
+            echo "      - $filename: topic/rendered-docs/$filename.html" >> mkdocs.yaml
+          done
+
+          echo 'theme:' >> mkdocs.yaml
+          echo '  name: material' >> mkdocs.yaml
+            
+      - name: Update list.html
+        run: |
+          # Start the HTML file with the basic structure
+          echo '<!DOCTYPE html>' > github-pages/topic/list.html
+          echo '<html lang="de">' >> github-pages/topic/list.html
+          echo '  <head>' >> github-pages/topic/list.html
+          echo '    <meta charset="UTF-8">' >> github-pages/topic/list.html
+          echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> github-pages/topic/list.html
+          echo '    <title>HTS-LTS Topics</title>' >> github-pages/topic/list.html
+          echo '    <style>' >> github-pages/topic/list.html
+          echo '      body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 50px; }' >> github-pages/topic/list.html
+          echo '      h1 { color: #333; }' >> github-pages/topic/list.html
+          echo '      ul { list-style-type: none; padding: 0; }' >> github-pages/topic/list.html
+          echo '      li { background-color: #007bff; color: white; padding: 15px; margin: 10px 0; border-radius: 5px; }' >> github-pages/topic/list.html
+          echo '      li a { color: white; text-decoration: none; display: block; }' >> github-pages/topic/list.html
+          echo '      li:hover { background-color: #0056b3; }' >> github-pages/topic/list.html
+          echo '      .back-btn { display: inline-block; margin-top: 20px; padding: 10px 20px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px; }' >> github-pages/topic/list.html
+          echo '      .back-btn:hover { background-color: #0056b3; }' >> github-pages/topic/list.html
+          echo '    </style>' >> github-pages/topic/list.html
+          echo '  </head>' >> github-pages/topic/list.html
+          echo '  <body>' >> github-pages/topic/list.html
+          echo '    <h1>Documentation for HTS LTS</h1>' >> github-pages/topic/list.html
+          echo '    <p>All available documentations: </p>' >> github-pages/topic/list.html
+          echo '    <ul>' >> github-pages/topic/list.html
+
+          # Append a list item for each HTML file
+          for file in github-pages/topic/rendered-docs/*.html; do
+            filename=$(basename "$file")
+            echo "      <li><a href='rendered-docs/$filename'>$filename</a></li>" >> github-pages/topic/list.html
+          done
+
+          echo '    </ul>' >> github-pages/topic/list.html
+          echo '    <a href="index.html" class="back-btn">Back to project list</a>' >> github-pages/topic/list.html
+          echo '  </body>' >> github-pages/topic/list.html
+          echo '</html>' >> github-pages/topic/list.html
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add github-pages/topic/rendered-docs
+          git add github-pages/topic/list.html
+          git add mkdocs.yaml
+          if ! git diff --cached --quiet; then
+            git commit -m "Generated documentation with MkDocs"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
