@@ -1,35 +1,58 @@
-### This is a Markdown test
+# My Cool Markdown Page
 
+Welcome to my cool Markdown page! Here, I will show you some of the coolest features of Markdown.
 
-# Test Changeeee
----
+## Table of Contents
 
-* This is a ``CodeBlock``
-* This is *italic*
-* This is **bold**
-* This is ***italic and bold***
-* This is an unordered list
-    * This is another point
-        * This is another point
-
-1. This is an ordered list
-2. This is another point
-3. This is another point
-    4. This is roman
-    5. This is alphabetical
-
-This is a headline
-==================
-
-This is a headline
-------------------
-
-> This is a quotation
-
-[This is a hyperlink](https://de.wikipedia.org/ "Wikipedia")
+1. [Introduction](#introduction)
+2. [Bold and Italics](#bold-and-italics)
+3. [Lists](#lists)
+4. [Links and Images](#links-and-images)
+5. [Code and Quotes](#code-and-quotes)
+6. [Table](#table)
+7. [Conclusion](#conclusion)
 
 ---
 
-![This is a picture](https://upload.wikimedia.org/wikipedia/commons/d/d9/Example_de.jpg "Beispielbild")
+## Introduction
 
----
+Markdown is a lightweight markup language that allows you to format text and prepare it for the web. It's easy to learn and super useful!
+
+## Bold and Italics
+
+You can make text **bold** or *italic* by enclosing it accordingly.
+
+- **Bold:** `**Text**`
+- *Italic:* `*Text*`
+
+## Lists
+
+Here are some lists you can create:
+
+### Unordered List
+
+- Item 1
+- Item 2
+    - Subitem 2.1
+    - Subitem 2.2
+- Item 3
+
+### Ordered List
+
+1. First item
+2. Second item
+3. Third item
+
+## Links and Images
+
+Here’s a [link to OpenAI](https://www.openai.com).
+
+![Markdown Logo](https://markdown-here.com/img/icon256.png)
+
+## Code and Quotes
+
+You can format code in a block:
+
+```python
+def hello_world():
+    print("Hello, World!")
