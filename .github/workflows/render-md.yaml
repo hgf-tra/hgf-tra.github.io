@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: documentation-rendering
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   render-docs:
