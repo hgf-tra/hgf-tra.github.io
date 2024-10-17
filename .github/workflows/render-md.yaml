@@ -8,6 +8,9 @@ on:
     paths:
       - 'doc/**/*.md'
 
+permissions:
+  contents: write
+
 jobs:
   render-docs:
     runs-on: ubuntu-latest

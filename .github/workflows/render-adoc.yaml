@@ -8,6 +8,9 @@ on:
     paths:
       - 'doc/**/*.adoc'
 
+permissions:
+  contents: write
+
 jobs:
   render-docs:
     runs-on: ubuntu-latest
