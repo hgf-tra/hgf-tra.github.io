@@ -1,4 +1,4 @@
-== Introduction and Goalsrthsrtssrt
+== Introduction and Goal
 
 === Requirements Overview
 
