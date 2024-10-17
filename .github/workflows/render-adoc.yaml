@@ -73,6 +73,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git pull origin render-adoc || echo "No changes to pull"
           git add github-pages/rendered-docs
           git add github-pages/list.html
           git commit -m "Generated HTML documentation from AsciiDoc" || echo "No changes to commit"
