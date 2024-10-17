@@ -78,6 +78,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git config pull.rebase false
           git pull origin render-md || echo "No changes to pull"
           git add github-pages/rendered-docs
           git add github-pages/list.html
