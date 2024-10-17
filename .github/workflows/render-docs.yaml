@@ -55,10 +55,10 @@ jobs:
 
           for file in github-pages/rendered-docs/*.html; do
             filename=$(basename "$file" .html)
-            displayname=$(echo "$filename" | sed 's/-/ /g')
+            displayname=$(echo "$filename" | sed 's/[_-]/ /g' | sed 's/\([a-z]\)\([A-Z]\)/\1 \2/g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')
             echo "      <li><a href='rendered-docs/$filename.html'>$displayname</a></li>" >> github-pages/list.html
           done
-
+  
           echo '    </ul>' >> github-pages/list.html
           echo '    <a href="/index.html" class="back-btn">Back to project list</a>' >> github-pages/list.html
           echo '  </body>' >> github-pages/list.html
