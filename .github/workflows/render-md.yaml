@@ -79,7 +79,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git config pull.rebase false
-          git pull origin render-md || echo "No changes to pull"
+          git pull origin render-md --allow-unrelated-histories || echo "No changes to pull"
           git add github-pages/rendered-docs
           git add github-pages/list.html
           git commit -m "Generated HTML documentation from Markdown" || echo "No changes to commit"
