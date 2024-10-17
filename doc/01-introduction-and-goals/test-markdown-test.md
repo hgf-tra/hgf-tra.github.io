@@ -1,4 +1,4 @@
-# My Cool Markdown Page1234
+# My Cool Markdown Page
 
 Welcome to my cool Markdown page! Here, I will show you some of the coolest features of Markdown.
 
