@@ -1,4 +1,4 @@
-name: Render Adoc
+name: render-adoc
 
 on:
   workflow_dispatch:
@@ -69,7 +69,7 @@ jobs:
           echo '  </body>' >> github-pages/list.html
           echo '</html>' >> github-pages/list.html
 
-      - name: Commit and push changes to render-adoc branch
+      - name: Commit And Push Changes To Main
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"

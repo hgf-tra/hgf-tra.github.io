@@ -1,4 +1,4 @@
-name: Render Md
+name: render-md
 
 on:
   workflow_dispatch:
@@ -75,7 +75,7 @@ jobs:
           echo '  </body>' >> github-pages/list.html
           echo '</html>' >> github-pages/list.html
 
-      - name: Commit and push changes to render-md branch
+      - name: Commit And Push Changes To Main
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
