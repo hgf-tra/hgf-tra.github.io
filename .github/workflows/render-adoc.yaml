@@ -23,10 +23,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create render-adoc branch
-        run: |
-          git checkout -b render-adoc || git checkout render-adoc
-
       - name: Render Adoc Files
         run: |
           mkdir -p github-pages/rendered-docs
@@ -77,23 +73,9 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git config pull.rebase false
-          git pull origin render-adoc --allow-unrelated-histories || echo "No changes to pull"
           git add github-pages/rendered-docs
           git add github-pages/list.html
           git commit -m "Generated HTML documentation from AsciiDoc" || echo "No changes to commit"
-          git push origin HEAD:render-adoc
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Merge Adoc Branch to Main
-        run: |
-          git checkout main
-          git merge --no-ff render-adoc || { echo "Merge conflict, please resolve manually"; exit 1; }
           git push origin main
-
-      - name: Delete render-adoc branch
-        run: |
-          git branch -d render-adoc
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
