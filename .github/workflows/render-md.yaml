@@ -15,6 +15,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: documentation-rendering
+  cancel-in-progress: true
+
 jobs:
   render-docs:
     runs-on: ubuntu-latest
@@ -22,22 +26,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check for changes in Markdown files
-        id: check_changes
-        run: |
-          if git diff --name-only HEAD^ HEAD | grep -q 'doc/.*\.md'; then
-            echo "changes=true" >> $GITHUB_ENV
-          else
-            echo "changes=false" >> $GITHUB_ENV
-          fi
-
       - name: Create render-md branch
-        if: env.changes == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           git checkout -b render-md || git checkout render-md
 
       - name: Install Pandoc
-        if: env.changes == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           if ! command -v pandoc &> /dev/null; then
             sudo apt-get update
@@ -45,19 +38,16 @@ jobs:
           fi
 
       - name: Render Markdown Files
-        if: env.changes == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p github-pages/rendered-docs
           find doc -name '*.md' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && pandoc "$1" -o "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")/$(basename "{}" .md).html"' _ {} \;
 
       - name: Copy Images
-        if: env.changes == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           find doc -name '*.png' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && cp "{}" "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")/"' \;
           find doc -name '*.jpg' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && cp "{}" "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")/"' \;
 
       - name: Update list.html
-        if: env.changes == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           echo '<!DOCTYPE html>' > github-pages/list.html
           echo '<html lang="de">' >> github-pages/list.html
@@ -94,7 +84,6 @@ jobs:
           echo '</html>' >> github-pages/list.html
 
       - name: Commit and push changes to render-md branch
-        if: env.changes == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -108,14 +97,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Merge Md Branch to Main
-        if: env.changes == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           git checkout main
           git merge --no-ff render-md || { echo "Merge conflict, please resolve manually"; exit 1; }
           git push origin main
 
       - name: Delete render-md branch
-        if: env.changes == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           git branch -d render-md
         env:

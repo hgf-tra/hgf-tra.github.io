@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: documentation-rendering
+  cancel-in-progress: true
+
 jobs:
   render-docs:
     runs-on: ubuntu-latest
