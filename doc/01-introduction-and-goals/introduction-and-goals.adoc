@@ -4,4 +4,4 @@
 
 === Quality Goals
 
-=== Stakeholders123
+=== Stakeholders
