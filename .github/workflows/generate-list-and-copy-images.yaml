@@ -62,5 +62,7 @@ jobs:
           echo '  </body>' >> github-pages/list.html
           echo '</html>' >> github-pages/list.html
 
-      - name: Checkout repository
+      - name: Checkout repository again to ensure it's up to date
         uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
