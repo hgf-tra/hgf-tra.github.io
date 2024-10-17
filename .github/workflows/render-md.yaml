@@ -27,7 +27,7 @@ jobs:
       - name: Render Markdown Files
         run: |
           mkdir -p github-pages/rendered-docs
-          find doc -name '*.md' -exec pandoc {} -o github-pages/rendered-docs/$(basename {} .md).html \;
+          find doc -name '*.md' -exec sh -c 'pandoc "$1" -o "github-pages/rendered-docs/$(basename "$1" .md).html"' _ {} \;
 
       - name: Check generated files
         run: |
