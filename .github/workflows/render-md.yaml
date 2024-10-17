@@ -79,10 +79,11 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git config pull.rebase false
+          git pull origin main
           git add github-pages/rendered-docs
           git add github-pages/list.html
           git commit -m "Generated HTML documentation from Markdown" || echo "No changes to commit"
-          git pull origin main
           git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
