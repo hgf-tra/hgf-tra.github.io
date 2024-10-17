@@ -1,0 +1,59 @@
+name: 'Generate List and Copy Images'
+description: 'Generates a list of rendered HTML documents and copies images to a specified directory.'
+
+inputs:
+  rendered_docs_path:
+    description: 'Path to the rendered documents.'
+    required: true
+    default: 'github-pages/rendered-docs'
+
+  list_file_path:
+    description: 'Path to the output list file.'
+    required: true
+    default: 'github-pages/list.html'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Copy Images
+      shell: bash
+      run: |
+        find doc -name '*.png' -exec bash -c 'mkdir -p "${{ inputs.rendered_docs_path }}/$(dirname "{}" | sed "s|^doc/||")" && cp "{}" "${{ inputs.rendered_docs_path }}/$(dirname "{}" | sed "s|^doc/||")/"' \;
+        find doc -name '*.jpg' -exec bash -c 'mkdir -p "${{ inputs.rendered_docs_path }}/$(dirname "{}" | sed "s|^doc/||")" && cp "{}" "${{ inputs.rendered_docs_path }}/$(dirname "{}" | sed "s|^doc/||")/"' \;
+
+    - name: Update list.html
+      shell: bash
+      run: |
+        echo '<!DOCTYPE html>' > "${{ inputs.list_file_path }}"
+        echo '<html lang="de">' >> "${{ inputs.list_file_path }}"
+        echo '  <head>' >> "${{ inputs.list_file_path }}"
+        echo '    <meta charset="UTF-8">' >> "${{ inputs.list_file_path }}"
+        echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> "${{ inputs.list_file_path }}"
+        echo '    <title>HTS-LTS Topics</title>' >> "${{ inputs.list_file_path }}"
+        echo '    <style>' >> "${{ inputs.list_file_path }}"
+        echo '      body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 50px; }' >> "${{ inputs.list_file_path }}"
+        echo '      h1 { color: #333; }' >> "${{ inputs.list_file_path }}"
+        echo '      ul { list-style-type: none; padding: 0; }' >> "${{ inputs.list_file_path }}"
+        echo '      li { background-color: #007bff; color: white; padding: 15px; margin: 10px 0; border-radius: 5px; }' >> "${{ inputs.list_file_path }}"
+        echo '      li a { color: white; text-decoration: none; display: block; }' >> "${{ inputs.list_file_path }}"
+        echo '      li:hover { background-color: #0056b3; }' >> "${{ inputs.list_file_path }}"
+        echo '      .back-btn { display: inline-block; margin-top: 20px; padding: 10px 20px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px; }' >> "${{ inputs.list_file_path }}"
+        echo '      .back-btn:hover { background-color: #0056b3; }' >> "${{ inputs.list_file_path }}"
+        echo '    </style>' >> "${{ inputs.list_file_path }}"
+        echo '  </head>' >> "${{ inputs.list_file_path }}"
+        echo '  <body>' >> "${{ inputs.list_file_path }}"
+        echo '    <h1>Documentation for HTS LTS</h1>' >> "${{ inputs.list_file_path }}"
+        echo '    <p>All available documentations: </p>' >> "${{ inputs.list_file_path }}"
+        echo '    <ul>' >> "${{ inputs.list_file_path }}"
+
+        find "${{ inputs.rendered_docs_path }}" -name '*.html' | while read file; do
+          relative_path=${file#${{ inputs.rendered_docs_path }}/}
+          filename=$(basename "$relative_path" .html)
+          displayname=$(echo "$filename" | sed 's/[_-]/ /g' | sed 's/\([a-z]\)\([A-Z]\)/\1 \2/g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')
+          echo "      <li><a href='rendered-docs/$relative_path'>$displayname</a></li>" >> "${{ inputs.list_file_path }}"
+        done
+
+        echo '    </ul>' >> "${{ inputs.list_file_path }}"
+        echo '    <a href="/index.html" class="back-btn">Back to project list</a>' >> "${{ inputs.list_file_path }}"
+        echo '  </body>' >> "${{ inputs.list_file_path }}"
+        echo '</html>' >> "${{ inputs.list_file_path }}"

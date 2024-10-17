@@ -27,9 +27,6 @@ jobs:
 
       - name: Generate List And Copy Images
         uses: ./.github/workflows/generate-list-and-copy-images.yaml
-        with:
-          rendered_docs_path: 'github-pages/rendered-docs'
-          list_file_path: 'github-pages/list.html'
 
       - name: Commit and push changes to render-adoc branch
         run: |
