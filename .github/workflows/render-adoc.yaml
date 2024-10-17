@@ -22,12 +22,12 @@ jobs:
       - name: Render Adoc Files
         run: |
           mkdir -p github-pages/rendered-docs
-          find doc -name '*.adoc' -exec docker run --rm -v ${PWD}:/documents asciidoctor/docker-asciidoctor asciidoctor -D github-pages/rendered-docs {} \;
+          find doc -name '*.adoc' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && docker run --rm -v ${PWD}:/documents asciidoctor/docker-asciidoctor asciidoctor -D "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" "{}"' \;
 
       - name: Copy Images
         run: |
-          find doc -name '*.png' -exec cp {} github-pages/rendered-docs/ \;
-          find doc -name '*.jpg' -exec cp {} github-pages/rendered-docs/ \;
+          find doc -name '*.png' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && cp "{}" "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")/"' \;
+          find doc -name '*.jpg' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && cp "{}" "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")/"' \;
 
       - name: Check generated files
         run: |
