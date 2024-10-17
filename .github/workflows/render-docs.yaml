@@ -17,10 +17,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build HTML
+      - name: Render AsciiDoc Files
         run: |
           mkdir -p github-pages/rendered-docs
-          find doc -name '*.adoc' -exec asciidoctor -D github-pages/rendered-docs --backend=html5 {} \;
+          find doc -name '*.adoc' -exec docker run --rm -v ${PWD}:/documents asciidoctor/docker-asciidoctor asciidoctor -D github-pages/rendered-docs {} \;
 
       - name: Check generated files
         run: |
@@ -72,5 +72,3 @@ jobs:
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
