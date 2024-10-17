@@ -25,6 +25,9 @@ jobs:
           mkdir -p github-pages/rendered-docs
           find doc -name '*.adoc' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && docker run --rm -v ${PWD}:/documents asciidoctor/docker-asciidoctor asciidoctor -D "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" "{}"' \;
 
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Generate List And Copy Images
         uses: ./.github/workflows/generate-list-and-copy-images.yaml
         with:
