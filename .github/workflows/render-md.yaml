@@ -16,9 +16,26 @@ permissions:
   contents: write
 
 jobs:
+  check_changes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for changes in Markdown files
+        id: check
+        run: |
+          git fetch origin main
+          if [ -n "$(git diff origin/main --name-only doc/**/*.md)" ]; then
+            echo "changes=true" >> $GITHUB_ENV
+          else
+            echo "changes=false" >> $GITHUB_ENV
+          fi
+
   render-docs:
     runs-on: ubuntu-latest
-
+    needs: check_changes
+    if: env.changes == 'true' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
