@@ -61,3 +61,6 @@ jobs:
           echo '    <a href="/index.html" class="back-btn">Back to project list</a>' >> github-pages/list.html
           echo '  </body>' >> github-pages/list.html
           echo '</html>' >> github-pages/list.html
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
