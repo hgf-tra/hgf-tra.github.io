@@ -26,7 +26,7 @@ jobs:
           find doc -name '*.adoc' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && docker run --rm -v ${PWD}:/documents asciidoctor/docker-asciidoctor asciidoctor -D "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" "{}"' \;
 
       - name: Generate List And Copy Images
-        uses: ./.github/workflows/generate-list-and-copy-images.yaml
+        uses: ./.github/actions/generate-list-and-copy-images/action.yaml
 
       - name: Commit and push changes to render-adoc branch
         run: |
