@@ -14,19 +14,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create render-adoc branch
         run: |
-          git checkout -b render-adoc
+          git checkout -b render-adoc || git checkout render-adoc
 
       - name: Render Adoc Files
         run: |
           mkdir -p github-pages/rendered-docs
           find doc -name '*.adoc' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && docker run --rm -v ${PWD}:/documents asciidoctor/docker-asciidoctor asciidoctor -D "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" "{}"' \;
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
 
       - name: Generate List And Copy Images
         uses: ./.github/workflows/generate-list-and-copy-images.yaml

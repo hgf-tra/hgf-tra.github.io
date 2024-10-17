@@ -14,11 +14,11 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create render-md branch
         run: |
-          git checkout -b render-md
+          git checkout -b render-md || git checkout render-md
 
       - name: Install Pandoc
         run: |
@@ -29,9 +29,6 @@ jobs:
         run: |
           mkdir -p github-pages/rendered-docs
           find doc -name '*.md' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && pandoc "$1" -o "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")/$(basename "{}" .md).html"' _ {} \;
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
 
       - name: Generate List And Copy Images
         uses: ./.github/workflows/generate-list-and-copy-images.yaml
