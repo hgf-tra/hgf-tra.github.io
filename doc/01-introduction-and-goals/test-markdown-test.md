@@ -2,8 +2,7 @@
 
 Welcome to my cool Markdown page! Here, I will show you some of the coolest features of Markdown.
 
-## Table of Contents1234
-
+## Table of Contents
 1. [Introduction](#introduction)
 2. [Bold and Italics](#bold-and-italics)
 3. [Lists](#lists)
