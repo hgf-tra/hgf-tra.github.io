@@ -58,10 +58,11 @@ jobs:
           echo '    <p>All available documentations: </p>' >> github-pages/list.html
           echo '    <ul>' >> github-pages/list.html
 
-          for file in github-pages/rendered-docs/*.html; do
-            filename=$(basename "$file" .html)
+          find github-pages/rendered-docs -name '*.html' | while read file; do
+            relative_path=${file#github-pages/rendered-docs/}
+            filename=$(basename "$relative_path" .html)
             displayname=$(echo "$filename" | sed 's/[_-]/ /g' | sed 's/\([a-z]\)\([A-Z]\)/\1 \2/g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')
-            echo "      <li><a href='rendered-docs/$filename.html'>$displayname</a></li>" >> github-pages/list.html
+            echo "      <li><a href='rendered-docs/$relative_path'>$displayname</a></li>" >> github-pages/list.html
           done
   
           echo '    </ul>' >> github-pages/list.html
