@@ -1,6 +1,10 @@
 name: Render Md
 
 on:
+  workflow_run:
+    workflows: [ "Render Adoc" ]
+    types:
+      - completed
   workflow_dispatch:
   push:
     branches:
