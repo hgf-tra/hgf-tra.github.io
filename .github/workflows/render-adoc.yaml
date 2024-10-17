@@ -1,4 +1,4 @@
-name: Render Documentation
+name: Render Adoc
 
 on:
   workflow_call:
@@ -19,7 +19,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Render AsciiDoc Files
+      - name: Render Adoc Files
         run: |
           mkdir -p github-pages/rendered-docs
           find doc -name '*.adoc' -exec docker run --rm -v ${PWD}:/documents asciidoctor/docker-asciidoctor asciidoctor -D github-pages/rendered-docs {} \;
