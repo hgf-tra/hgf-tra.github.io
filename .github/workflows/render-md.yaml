@@ -1,15 +1,12 @@
 name: Render Md
 
 on:
-  workflow_call:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
       - 'doc/**/*.md'
-
-permissions:
-  contents: write
 
 jobs:
   render-docs:
@@ -18,6 +15,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Create render-md branch
+        run: |
+          git checkout -b render-md
 
       - name: Install Pandoc
         run: |
@@ -29,60 +30,31 @@ jobs:
           mkdir -p github-pages/rendered-docs
           find doc -name '*.md' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && pandoc "$1" -o "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")/$(basename "{}" .md).html"' _ {} \;
 
-      - name: Copy Images
-        run: |
-          find doc -name '*.png' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && cp "{}" "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")/"' \;
-          find doc -name '*.jpg' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && cp "{}" "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")/"' \;
+      - name: Generate List And Copy Images
+        uses: ./.github/workflows/generate-list-and-copy-images.yaml
+        with:
+          rendered_docs_path: 'github-pages/rendered-docs'
+          list_file_path: 'github-pages/list.html'
 
-      - name: Check generated files
-        run: |
-          echo "Listing rendered files:"
-          ls -R github-pages/rendered-docs/
-
-      - name: Update list.html
-        run: |
-          echo '<!DOCTYPE html>' > github-pages/list.html
-          echo '<html lang="de">' >> github-pages/list.html
-          echo '  <head>' >> github-pages/list.html
-          echo '    <meta charset="UTF-8">' >> github-pages/list.html
-          echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> github-pages/list.html
-          echo '    <title>HTS-LTS Topics</title>' >> github-pages/list.html
-          echo '    <style>' >> github-pages/list.html
-          echo '      body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 50px; }' >> github-pages/list.html
-          echo '      h1 { color: #333; }' >> github-pages/list.html
-          echo '      ul { list-style-type: none; padding: 0; }' >> github-pages/list.html
-          echo '      li { background-color: #007bff; color: white; padding: 15px; margin: 10px 0; border-radius: 5px; }' >> github-pages/list.html
-          echo '      li a { color: white; text-decoration: none; display: block; }' >> github-pages/list.html
-          echo '      li:hover { background-color: #0056b3; }' >> github-pages/list.html
-          echo '      .back-btn { display: inline-block; margin-top: 20px; padding: 10px 20px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px; }' >> github-pages/list.html
-          echo '      .back-btn:hover { background-color: #0056b3; }' >> github-pages/list.html
-          echo '    </style>' >> github-pages/list.html
-          echo '  </head>' >> github-pages/list.html
-          echo '  <body>' >> github-pages/list.html
-          echo '    <h1>Documentation for HTS LTS</h1>' >> github-pages/list.html
-          echo '    <p>All available documentations: </p>' >> github-pages/list.html
-          echo '    <ul>' >> github-pages/list.html
-
-          find github-pages/rendered-docs -name '*.html' | while read file; do
-            relative_path=${file#github-pages/rendered-docs/}
-            filename=$(basename "$relative_path" .html)
-            displayname=$(echo "$filename" | sed 's/[_-]/ /g' | sed 's/\([a-z]\)\([A-Z]\)/\1 \2/g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')
-            echo "      <li><a href='rendered-docs/$relative_path'>$displayname</a></li>" >> github-pages/list.html
-          done
-          
-          echo '    </ul>' >> github-pages/list.html
-          echo '    <a href="/index.html" class="back-btn">Back to project list</a>' >> github-pages/list.html
-          echo '  </body>' >> github-pages/list.html
-          echo '</html>' >> github-pages/list.html
-
-      - name: Commit and push changes
+      - name: Commit and push changes to render-md branch
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add github-pages/rendered-docs
           git add github-pages/list.html
           git commit -m "Generated HTML documentation from Markdown" || echo "No changes to commit"
+          git push origin HEAD:render-md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge Md Branch to Main
+        run: |
+          git checkout main
+          git merge --no-ff render-md || { echo "Merge conflict, please resolve manually"; exit 1; }
           git push origin main
 
+      - name: Delete render-md branch
+        run: |
+          git branch -d render-md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

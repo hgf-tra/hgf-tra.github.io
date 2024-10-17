@@ -1,0 +1,63 @@
+name: Generate List And Copy Images
+
+on:
+  workflow_call:
+    inputs:
+      rendered_docs_path:
+        required: true
+        type: string
+      list_file_path:
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Copy Images
+        run: |
+          find doc -name '*.png' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && cp "{}" "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")/"' \;
+          find doc -name '*.jpg' -exec bash -c 'mkdir -p "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")" && cp "{}" "github-pages/rendered-docs/$(dirname "{}" | sed "s|^doc/||")/"' \;
+
+      - name: Update list.html
+        run: |
+          echo '<!DOCTYPE html>' > github-pages/list.html
+          echo '<html lang="de">' >> github-pages/list.html
+          echo '  <head>' >> github-pages/list.html
+          echo '    <meta charset="UTF-8">' >> github-pages/list.html
+          echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> github-pages/list.html
+          echo '    <title>HTS-LTS Topics</title>' >> github-pages/list.html
+          echo '    <style>' >> github-pages/list.html
+          echo '      body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 50px; }' >> github-pages/list.html
+          echo '      h1 { color: #333; }' >> github-pages/list.html
+          echo '      ul { list-style-type: none; padding: 0; }' >> github-pages/list.html
+          echo '      li { background-color: #007bff; color: white; padding: 15px; margin: 10px 0; border-radius: 5px; }' >> github-pages/list.html
+          echo '      li a { color: white; text-decoration: none; display: block; }' >> github-pages/list.html
+          echo '      li:hover { background-color: #0056b3; }' >> github-pages/list.html
+          echo '      .back-btn { display: inline-block; margin-top: 20px; padding: 10px 20px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px; }' >> github-pages/list.html
+          echo '      .back-btn:hover { background-color: #0056b3; }' >> github-pages/list.html
+          echo '    </style>' >> github-pages/list.html
+          echo '  </head>' >> github-pages/list.html
+          echo '  <body>' >> github-pages/list.html
+          echo '    <h1>Documentation for HTS LTS</h1>' >> github-pages/list.html
+          echo '    <p>All available documentations: </p>' >> github-pages/list.html
+          echo '    <ul>' >> github-pages/list.html
+
+          find github-pages/rendered-docs -name '*.html' | while read file; do
+            relative_path=${file#github-pages/rendered-docs/}
+            filename=$(basename "$relative_path" .html)
+            displayname=$(echo "$filename" | sed 's/[_-]/ /g' | sed 's/\([a-z]\)\([A-Z]\)/\1 \2/g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')
+            echo "      <li><a href='rendered-docs/$relative_path'>$displayname</a></li>" >> github-pages/list.html
+          done
+
+          echo '    </ul>' >> github-pages/list.html
+          echo '    <a href="/index.html" class="back-btn">Back to project list</a>' >> github-pages/list.html
+          echo '  </body>' >> github-pages/list.html
+          echo '</html>' >> github-pages/list.html
