@@ -24,6 +24,11 @@ jobs:
           mkdir -p github-pages/rendered-docs
           find doc -name '*.adoc' -exec docker run --rm -v ${PWD}:/documents asciidoctor/docker-asciidoctor asciidoctor -D github-pages/rendered-docs {} \;
 
+      - name: Copy Images
+        run: |
+          find doc -name '*.png' -exec cp {} github-pages/rendered-docs/ \;
+          find doc -name '*.jpg' -exec cp {} github-pages/rendered-docs/ \;
+
       - name: Check generated files
         run: |
           echo "Listing rendered files:"
